@@ -47,6 +47,7 @@ class Graph{
                 std::cout << std::endl;
             }
         }
+
         std::vector<int>& GetNbr(int Node) {
             return map_graph[Node];
         }
@@ -90,27 +91,25 @@ int main() {
 
     Graph g2;
 
-    // 1. Add nodes (using 0-9 to keep it simple but larger)
+    //  Add nodes 0-9
     for (int i = 0; i < 10; i++) {
         g2.addNode(i);
     }
 
-    // 2. Add "Random" Edges to create a complex web
-    // This includes cycles (loops) which will crash your program
-    // if the 'visited' set isn't working properly.
+    
     g2.addEdge(0, 1);
     g2.addEdge(0, 4);
     g2.addEdge(1, 2);
     g2.addEdge(1, 3);
-    g2.addEdge(1, 4); // Creates a triangle cycle (0-1-4)
+    g2.addEdge(1, 4);
     g2.addEdge(2, 5);
     g2.addEdge(3, 6);
-    g2.addEdge(4, 5); // Creates a cycle (1-2-5-4)
+    g2.addEdge(4, 5); 
     g2.addEdge(4, 7);
     g2.addEdge(5, 8);
-    g2.addEdge(6, 7); // Creates a path convergence at 7
-    g2.addEdge(7, 8); // Creates a cycle (4-5-8-7)
-    g2.addEdge(8, 9); // The 'tail' of the graph
+    g2.addEdge(6, 7); 
+    g2.addEdge(7, 8); 
+    g2.addEdge(8, 9); 
 
     std::cout << "--- Structure of G2 ---" << std::endl;
     g2.printGraph();

@@ -5,10 +5,10 @@
 class Graph{
     public:
         Graph() {}
-        void addVertex(int vertex) {
-            map_graph[vertex] = {};
+        void addNode(int Node) {
+            map_graph[Node] = {};
         }
-        // vector to store neighbors of each vertex
+        // vector to store neighbors of each Node
         void addEdge(int Vert1, int Vert2) {
             // creates an equivalence of nodes
             map_graph[Vert1].push_back(Vert2);
@@ -30,8 +30,8 @@ class Graph{
                 std::cout << std::endl;
             }
         }
+        //void removeNode() {}
 
-         
     private:
         std::map<int, std::vector<int>> map_graph;
 
@@ -39,9 +39,9 @@ class Graph{
 
 int main() {
     Graph g;
-    g.addVertex(1);
-    g.addVertex(2);
-    g.addVertex(3);
+    g.addNode(1);
+    g.addNode(2);
+    g.addNode(3);
     g.addEdge(1, 2);
     g.addEdge(1, 3);
     g.printGraph();

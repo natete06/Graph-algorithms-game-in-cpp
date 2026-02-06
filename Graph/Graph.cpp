@@ -6,7 +6,7 @@ class Graph{
     public:
         Graph() {}
         void addNode(int Node) {
-            map_graph[Node] = {};
+            map_graph[Node] = {}; 
         }
         // vector to store neighbors of each Node
         void addEdge(int Vert1, int Vert2) {
@@ -30,7 +30,9 @@ class Graph{
                 std::cout << std::endl;
             }
         }
-        //void removeNode() {}
+        std::vector<int>& GetNbr(int Node) {
+            return map_graph[Node];
+        }
 
     private:
         std::map<int, std::vector<int>> map_graph;

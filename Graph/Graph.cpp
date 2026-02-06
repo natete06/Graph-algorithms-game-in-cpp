@@ -91,29 +91,30 @@ int main() {
 
     Graph g2;
 
-    //  Add nodes 0-9
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i <= 10; i++) {
         g2.addNode(i);
     }
 
-    
-    g2.addEdge(0, 1);
-    g2.addEdge(0, 4);
-    g2.addEdge(1, 2);
-    g2.addEdge(1, 3);
-    g2.addEdge(1, 4);
-    g2.addEdge(2, 5);
-    g2.addEdge(3, 6);
-    g2.addEdge(4, 5); 
-    g2.addEdge(4, 7);
-    g2.addEdge(5, 8);
-    g2.addEdge(6, 7); 
-    g2.addEdge(7, 8); 
-    g2.addEdge(8, 9); 
+    // Chaotic edge addition
+    g2.addEdge(0, 9);
+    g2.addEdge(0, 5);
+    g2.addEdge(0, 2);
 
-    std::cout << "--- Structure of G2 ---" << std::endl;
+    g2.addEdge(2, 8);
+    g2.addEdge(2, 1);
+    
+    g2.addEdge(5, 4);
+    g2.addEdge(5, 6);
+    
+    g2.addEdge(9, 3);
+    g2.addEdge(9, 7);
+    g2.addEdge(9, 10);
+
+    std::cout << "--- Graph Structure g2 ---" << std::endl;
     g2.printGraph();
 
-    std::cout << "\n--- Running BFS on G2 (Start Node: 0) ---" << std::endl;
+    std::cout << "\n--- BFS Order (Start: 0) ---" << std::endl;
     BFS(&g2, 0);
+
+    return 0;
 }

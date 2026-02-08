@@ -7,20 +7,19 @@
 
 class Graph{
     
-    private:
+    protected:
     // Node : neighbours using container nesting
         std::map<int, std::vector<int>> map_graph;
 
     public:
-        Graph() {
-
-        }
+        Graph() {}
+        virtual ~Graph() {}
 
         void addNode(int Node) {
             map_graph[Node] = {}; 
         }
         // update vector which stores neighbors of each Node
-        void addEdge(int Vert1, int Vert2) {
+        virtual void addEdge(int Vert1, int Vert2) {
             // Add the connection
             map_graph[Vert1].push_back(Vert2);
             
@@ -55,12 +54,30 @@ class Graph{
 
 };
 
-void BFS (Graph *g, int begin) {
+class BFSTree : public Graph {
+public:
+    // overriden methon that only adds connection from source node to child node, not an adjaceny list like in the original graph
+    void addEdge(int Parent, int Child) override {
+        
+        map_graph[Parent].push_back(Child);
+        
+        // Ensure the child node exists in the map too (even if it has no children yet or at all)
+        if (map_graph.find(Child) == map_graph.end()) {
+             std::vector<int> empty;
+             map_graph[Child] = empty;
+        }
+    }
+};
+
+Graph* BFS(Graph *g, int begin) {
     std::queue<int> bfs_Queue;      
     std::unordered_set<int> visited = {};
 
+    BFSTree *tree = new BFSTree();
+
     visited.insert(begin);
     bfs_Queue.push(begin);
+    tree->addNode(begin);
 
     while (!bfs_Queue.empty()) {
         //store before popping
@@ -75,20 +92,17 @@ void BFS (Graph *g, int begin) {
             if (visited.count(neighbors[i]) == 0) {
                 bfs_Queue.push(neighbors[i]);
                 visited.insert(neighbors[i]);
+
+                tree->addNode(neighbors[i]);
+                tree->addEdge(current, neighbors[i]);
             }
         }
     }
-
-
+    return tree;
 }
 
 int main() {
     
-
-    std::cout << "\n\n==========================" << std::endl;
-    std::cout << "   TESTING GRAPH G2" << std::endl;
-    std::cout << "==========================\n" << std::endl;
-
     Graph g2;
 
     for (int i = 0; i <= 10; i++) {
@@ -114,7 +128,9 @@ int main() {
     g2.printGraph();
 
     std::cout << "\n--- BFS Order (Start: 0) ---" << std::endl;
-    BFS(&g2, 0);
+    Graph* bfst = BFS(&g2, 0);
+    bfst->printGraph();
+
 
     return 0;
-}
+} 

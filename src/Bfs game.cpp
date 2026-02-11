@@ -201,12 +201,15 @@ public:
 */
 
 // returns a vector because the steps of visiting nodes can be directly attributed to a certain index 
-std::vector<int> BfsOrderKey(Graph *g, int begin) {
+std::vector<int> BfsOrderKey(Graph *g, int begin, std::map<int,int>& predecessor) {
     std::vector<int> order;
     std::queue<int> bfs_Queue;
     std::unordered_set<int> visited = {};
 
     //BFSTree *tree = new BFSTree();
+
+    predecessor.clear();
+    predecessor[begin] = -1;   // start has no predecessor
 
     visited.insert(begin);
     bfs_Queue.push(begin);
@@ -228,6 +231,8 @@ std::vector<int> BfsOrderKey(Graph *g, int begin) {
                 bfs_Queue.push(neighbors[i]);
                 // stores discovered nodes and keeps them from being rediscovered
                 visited.insert(neighbors[i]);
+                predecessor[neighbors[i]] = current;
+
 
                 //tree->addNode(neighbors[i]);
                 //tree->addEdge(current, neighbors[i]);

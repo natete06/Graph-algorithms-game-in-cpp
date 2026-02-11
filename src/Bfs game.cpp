@@ -30,6 +30,7 @@ class Graph{
     // Node : neighbours using container nesting
         std::map<int, Node> nodes;
         std::map<int, std::vector<int>> map_graph;
+        std::map<std::pair<int,int>, Color> edgeColors;
 
     public:
         Graph() {}
@@ -60,7 +61,15 @@ class Graph{
                         Vector2 p1 = node.position;
                         Vector2 p2 = nodes[nbrId].position;
 
-                        DrawLineEx(p1, p2, 2.0f, GRAY); // draws a  line between two points (p1, p2) with thickness 2 and color GRAY.
+                        Color actual = GRAY; //default color
+                        auto Eit = edgeColors.find(pairs);
+                        // changes the drawn color if the color to be changed to is added to the edgeColors map by the setEdgecolor method at a certain frame
+                        if (Eit != edgeColors.end()) {
+                            actual = Eit->second;
+                        }
+
+
+                        DrawLineEx(p1, p2, 2.0f, actual); // draws a  line between two points (p1, p2) with thickness 2 and color GRAY.
                         drawnEdges.insert(pairs);
 
                     }
@@ -103,6 +112,52 @@ class Graph{
             std::sort(map_graph[Vert2].begin(), map_graph[Vert2].end());
         }
 
+
+        // methods using while game is running
+
+        // gives info on which node has been clocked(returns the node id of the clicked node)
+        int pickednode(Vector2 click, float radius) const {
+
+            for (auto it = nodes.begin(); it != nodes.end(); ++it) {
+                // get the value(node) to access its coordinates
+                const Node& node= it->second;
+                // returns the id of the node if the clicked areas coordinates lie within the curcumference of any of the nodes during the iteration
+                if (CheckCollisionPointCircle(click, node.position, radius)) {
+                    // function returns true if click coordinates lie within a radius of 20 using the node position as a center
+
+                    return node.id;
+                }
+
+                
+            }
+            // returns if loop ends without finding a node
+            return -1;
+        }
+
+        //color setter function
+        void setnodeclr(int id, Color col) {
+            auto it = nodes.find(id);
+            // only enters if a node exists with that id
+            if (it != nodes.end()) {
+                it->second.color = col;
+            }
+        }
+        // changes the color stored in the color map from node a to b
+        void changeEdgeclr(int a , int b, Color col) {
+            std::pair<int, int> edge = {std::min(a, b), std::max(a, b)};
+            edgeColors[edge] = col;
+        }
+
+
+
+
+            
+
+
+
+
+
+
         void printGraph() {
             // loops through each key(node) and prints the values from the vector(neighbours) using an iterator object
             for (std::map<int, std::vector<int>>::iterator it = map_graph.begin(); it != map_graph.end(); ++it) {
@@ -123,6 +178,9 @@ class Graph{
         std::vector<int>& GetNbr(int Node) {
             return map_graph[Node];
         }
+
+
+
 };
 
 /*
@@ -140,20 +198,25 @@ public:
         }
     }
 };
+*/
 
-Graph* BFS(Graph *g, int begin) {
-    std::queue<int> bfs_Queue;      
+// returns a vector because the steps of visiting nodes can be directly attributed to a certain index 
+std::vector<int> BfsOrderKey(Graph *g, int begin) {
+    std::vector<int> order;
+    std::queue<int> bfs_Queue;
     std::unordered_set<int> visited = {};
 
-    BFSTree *tree = new BFSTree();
+    //BFSTree *tree = new BFSTree();
 
     visited.insert(begin);
     bfs_Queue.push(begin);
-    tree->addNode(begin);
+    //tree->addNode(begin);
 
     while (!bfs_Queue.empty()) {
         //store before popping
         int current = bfs_Queue.front();
+        order.push_back(current);
+
         std::cout<< "Visiting: " <<current<<std::endl;
         //dequeue current node
         bfs_Queue.pop();
@@ -163,16 +226,16 @@ Graph* BFS(Graph *g, int begin) {
         for (int i = 0; i < neighbors.size(); i++) {
             if (visited.count(neighbors[i]) == 0) {
                 bfs_Queue.push(neighbors[i]);
+                // stores discovered nodes and keeps them from being rediscovered
                 visited.insert(neighbors[i]);
 
-                tree->addNode(neighbors[i]);
-                tree->addEdge(current, neighbors[i]);
+                //tree->addNode(neighbors[i]);
+                //tree->addEdge(current, neighbors[i]);
             }
         }
     }
-    return tree;
+    return order;
 }
-*/
 
 int main() {
     
@@ -228,13 +291,13 @@ int main() {
     int yval = 400;
     Color idk{230, 99, 102, 255}; // struct with rgb then alpha as args
 
-    InitWindow(800, 800, "Type shiiii");
+    InitWindow(1280, 720, "Bfs Guesser");
     // game speed/fps
     SetTargetFPS(60);
 
     // Game loop, runs until close icon is clicked or if esc is pressed
     while(!WindowShouldClose()) {
-        
+
         BeginDrawing();
         ClearBackground(idk);
         // (coords first 2) radius then color

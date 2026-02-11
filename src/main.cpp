@@ -143,20 +143,10 @@ class Graph{
             }
         }
         // changes the color stored in the color map from node a to b
-        void changeEdgeclr(int a , int b, Color col) {
+        void setEdgeclr(int a , int b, Color col) {
             std::pair<int, int> edge = {std::min(a, b), std::max(a, b)};
             edgeColors[edge] = col;
         }
-
-
-
-
-            
-
-
-
-
-
 
         void printGraph() {
             // loops through each key(node) and prints the values from the vector(neighbours) using an iterator object
@@ -176,7 +166,7 @@ class Graph{
         }
 
         std::vector<int>& GetNbr(int Node) {
-            return map_graph[Node];
+            return map_graph.at(Node);
         }
 
 
@@ -226,7 +216,7 @@ std::vector<int> BfsOrderKey(Graph *g, int begin, std::map<int,int>& predecessor
         // neighbors stored for iteration
 
         const std::vector<int>& neighbors = g->GetNbr(current);
-        for (int i = 0; i < neighbors.size(); i++) {
+        for (int i = 0; i < (int)(neighbors.size()); i++) {
             if (visited.count(neighbors[i]) == 0) {
                 bfs_Queue.push(neighbors[i]);
                 // stores discovered nodes and keeps them from being rediscovered
@@ -295,8 +285,17 @@ int main() {
     std::map<int,int> pred;
     std::vector<int> bfsOrder = BfsOrderKey(&g2, 0, pred); // runs bfs and stores order and predecesssors
 
-    int xval = 400;
-    int yval = 400;
+    int stepIndex = 0; // current step of the bfs
+    int tries = 10;
+
+    //bools and states 
+    
+    bool gameOver = false;
+    bool gameWin = false;
+
+
+    //int xval = 400;
+    //int yval = 400;
     Color idk{230, 99, 102, 255}; // struct with rgb then alpha as args
 
     InitWindow(1280, 720, "Bfs Guesser");
@@ -306,14 +305,61 @@ int main() {
     // Game loop, runs until close icon is clicked or if esc is pressed
     while(!WindowShouldClose()) {
 
+        
+        if (!gameOver && !gameWin) { // only continue if game is neither won nor lost
+
+            // left click and as long as the size of the vector isnt exceeded
+            if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && stepIndex < (int)bfsOrder.size()) {
+                Vector2 maus = GetMousePosition();
+                int pick = g2.pickednode(maus, 20.0f);
+
+                if (pick != -1) {  // only if you actually clicked a node
+                    int expected = bfsOrder[stepIndex];
+
+                    if(pick == expected) {
+                        g2.setnodeclr(pick, GREEN);
+                        auto it = pred.find(pick); // check if pred contains pick
+                            if (it != pred.end() && it->second != -1) {
+                                g2.setEdgeclr(it->second, pick, GREEN);
+                            }
+
+                        stepIndex++;
+
+                    }
+
+                    else {
+                        g2.setnodeclr(pick, RED);
+                        tries--;
+                        if (tries <= 0) {
+                            gameOver = true;
+                        }
+                    }
+
+                    if (stepIndex >= (int)bfsOrder.size()) {
+                        gameWin = true;
+                    }
+
+                }
+            }
+
+        }
+
         BeginDrawing();
         ClearBackground(idk);
-        // (coords first 2) radius then color
-        DrawCircle(xval, yval, 15, WHITE);
-
+        
         g2.drawGraph();
 
+
+        DrawText(TextFormat("Tries left: %d", tries), 10, 10, 20, BLACK);
+        DrawText(TextFormat("Step: %d out of %d", stepIndex, (int)bfsOrder.size()), 10, 35, 20, BLACK);
+
+        if (gameOver) {
+            DrawText("Game Over:(", 10, 85, 20, BLACK);
+        } 
         
+        else if (gameWin) {
+            DrawText("Congratulations you have won!", 10, 85, 20, BLACK);
+        }
 
 
         EndDrawing();

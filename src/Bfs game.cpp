@@ -250,36 +250,36 @@ int main() {
     // (Delete the for-loop that uses i*50)
 
     // 2. SETUP NODES (Manual "Puzzle" Placement)
-    // Central Ring (The "Trap" - loops back on itself)
-    g2.addNode(0, 400, 100); // Start (Top)
+    // Central Ring  
+    g2.addNode(0, 400, 100); // Start
     g2.addNode(1, 600, 300); // Right
     g2.addNode(2, 400, 500); // Bottom
     g2.addNode(3, 200, 300); // Left
 
-    // The "Distractions" (Outer nodes that tempt you away)
+    
     g2.addNode(4, 100, 150); // Top Left Wing
     g2.addNode(5, 700, 150); // Top Right Wing
     g2.addNode(6, 100, 450); // Bottom Left Wing
     g2.addNode(7, 700, 450); // Bottom Right Wing
 
-    // The "Bridge" (Connecting distant parts)
+    
     g2.addNode(8, 400, 300); // Dead Center
 
-    // 3. SETUP EDGES (The Logic)
+    
     // Connect the ring
     g2.addEdge(0, 1);
     g2.addEdge(1, 2);
     g2.addEdge(2, 3);
     g2.addEdge(3, 0);
 
-    // Connect the center bridge (Creates short-cuts!)
+    // Connect the center bridge 
     g2.addEdge(0, 8);
     g2.addEdge(2, 8);
 
-    // Connect the wings (Dead ends or loops?)
+    
     g2.addEdge(3, 4); // Left -> Wing
-    g2.addEdge(4, 6); // Wing -> Wing (Loop on the side)
-    g2.addEdge(6, 2); // Wing -> Bottom (Back connection)
+    g2.addEdge(4, 6); // Wing -> Wing
+    g2.addEdge(6, 2); // Wing -> Bottom 
 
     g2.addEdge(1, 5); // Right -> Wing
     g2.addEdge(5, 7);
@@ -291,6 +291,9 @@ int main() {
     //std::cout << "\n--- BFS Order (Start: 0) ---" << std::endl;
     //Graph* bfst = BFS(&g2, 0);
     //bfst->printGraph();
+
+    std::map<int,int> pred;
+    std::vector<int> bfsOrder = BfsOrderKey(&g2, 0, pred); // runs bfs and stores order and predecesssors
 
     int xval = 400;
     int yval = 400;

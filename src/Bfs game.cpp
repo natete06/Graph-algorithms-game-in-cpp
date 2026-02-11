@@ -234,23 +234,7 @@ int main() {
 
     // Game loop, runs until close icon is clicked or if esc is pressed
     while(!WindowShouldClose()) {
-
-        if(IsKeyDown(KEY_RIGHT)) {
-            xval += 2;
-        }
-  
-        else if(IsKeyDown(KEY_LEFT)) {
-            xval -= 2;
-        }
-
-        else if(IsKeyDown(KEY_UP)) {
-            yval -= 2;
-        }
-
-        else if(IsKeyDown(KEY_DOWN)) {
-            yval += 2;
-        }
-
+        
         BeginDrawing();
         ClearBackground(idk);
         // (coords first 2) radius then color

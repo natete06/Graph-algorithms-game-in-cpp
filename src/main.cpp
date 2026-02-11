@@ -294,8 +294,6 @@ int main() {
     bool gameWin = false;
 
 
-    //int xval = 400;
-    //int yval = 400;
     Color idk{230, 99, 102, 255}; // struct with rgb then alpha as args
 
     InitWindow(1280, 720, "Bfs Guesser");

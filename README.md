@@ -1,4 +1,4 @@
-# Graph Algorithms Visualiser (C++) — BFS Guessing Game (In progress...🚧🚩)
+# Graph Algorithms Visualiser (C++) — BFS Guessing Game (Working progress...🚧🚩)
 
 An interactive C++ project that visualizes a graph using **raylib** and turns **Breadth-First Search (BFS)** into a small “guess the next node” game.
 
